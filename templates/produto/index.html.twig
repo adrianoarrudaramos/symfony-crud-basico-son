@@ -16,7 +16,7 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<a href="" class="btn btn-primary btn-lg pull-right">Adicionar produto</a>
+			<a href="{{ path("cadastrar_produto") }}" class="btn btn-primary btn-lg pull-right">Adicionar produto</a>
 		</div>
 	</div>
 
@@ -37,10 +37,10 @@
 					<td>{{ produto.nome }}</td>
 					<td>{{ produto.preco }}</td>
 					<td>
-						<a class="btn btn-sm btn-warning" href="">
+						<a class="btn btn-sm btn-warning" href="{{ path('visualizar_produto', {"id": produto.id}) }}">
 							<i class="fa fa-eye"></i>
 						</a>
-						<a class="btn btn-sm btn-success" href="">
+						<a class="btn btn-sm btn-success" href="{{ path('editar_produto', {"id": produto.id}) }}">
 							<i class="fa fa-pencil"></i>
 						</a>
 						<a class="btn btn-sm btn-danger" href="">

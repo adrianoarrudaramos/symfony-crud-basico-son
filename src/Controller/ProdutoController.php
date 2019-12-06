@@ -38,9 +38,7 @@ class ProdutoController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($produto);
             $em->flush();
-
             $this->get('session')->getFlashBag()->set('success', 'Produto foi salvo com sucesso!');
-
             return $this->redirectToRoute('listar_produto');
         }
 
@@ -57,6 +55,44 @@ class ProdutoController extends AbstractController
      */
     public function update(Request $request, $id)
     {
-        return $this->render("produto/update.html.twig");
+        $em = $this->getDoctrine()->getManager();
+
+        $produto = $em->getRepository(Produto::class)->find($id);
+
+        $form = $this->createForm(ProdutoType::class, $produto);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($produto);
+            $em->flush();
+
+            $this->get("session")
+                ->getFlashBag()
+                ->set("success", "O produto " . $produto->getNome() . " foi alterado com sucesso!");
+            return $this->redirectToRoute("listar_produto");
+        }
+
+        return $this->render("produto/update.html.twig", [
+            'produto' => $produto,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * 
+     * @Route("produto/visualizar/{id}", name="visualizar_produto")
+     * 
+     * @return Response
+     */
+    public function view(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $produto = $em->getRepository(Produto::class)->find($id);
+
+        return $this->render('produto/view.html.twig', [
+            'produto' => $produto
+        ]);
     }
 }
