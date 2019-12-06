@@ -95,4 +95,31 @@ class ProdutoController extends AbstractController
             'produto' => $produto
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * 
+     * @Route("produto/apagar/{id}", name="apagar_produto")
+     */
+    public function delete(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $produto = $em->getRepository(Produto::class)->find($id);
+
+        if (!$produto) {
+            $mensagem = "Produto não foi encontrado!";
+            $tipo = "warning";
+        } else {
+            $em->remove($produto);
+            $em->flush();
+            $mensagem = "Produto foi excluído com sucesso!";
+            $tipo = "success";
+        }
+
+        $this->get('session')
+            ->getFlashBag()
+            ->set($tipo, $mensagem);
+        return $this->redirectToRoute("listar_produto");
+    }
 }
